@@ -225,7 +225,9 @@ export default {
       //return this.$store.state.page
     },
     numPages() {
-      //return 0
+      //return 
+      
+      
       let pages=[]
       let numberOfPages = Math.ceil(this.response.data.data.total/this.response.data.data.limit)
       //var length = Math.log(numberOfPages) * Math.LOG10E + 1 | 0
@@ -257,7 +259,7 @@ button.page-link{
   display: inline-block;
   font-size: 20px;
   font-weight: 500;
-  margin:0;
+  margin: -2px 0 0 0;
   padding:.2em;
   border-radius:0rem;
   border-width:2px 1px 2px 1px;
