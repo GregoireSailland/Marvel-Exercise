@@ -14,7 +14,7 @@
 				Original issue:
 				<a @click="_fetch(result.originalIssue,'')" class="link" v-html="result.originalIssue.name"></a>
 			</div>
-
+			<!--div v-if="result.collections && result.collections.length">{{result.collections}}</div-->
 
 			<div v-for="(result_type,result_type_key) in results_types" :key="'result-type-'+result_type_key">
 				<div v-if="result[result_type.name] && result[result_type.name].available" :class="result_type.name">
@@ -51,6 +51,7 @@ export default{
 	},
 	data(){
 		return{
+			/*It is possible to reorder items*/
 			results_types:[
 			{name:'characters',key:'character'},
 			{name:'series',key:'serie'},
@@ -58,6 +59,9 @@ export default{
 			{name:'comics',key:'comic'},
 			{name:'stories',key:'story'},
 			{name:'events',key:'event'},
+			//{name:'variants',key:'variant'},
+			//{name:'collections',key:'collection'},
+
 			],
 			opened_details:{
 				result:null,
@@ -80,8 +84,13 @@ export default{
 			return title.join(' - ')
 		},
 		open_details(result_key,result_type_key){
-			this.opened_details.result=result_key
-			this.opened_details.result_type=result_type_key
+			if(this.opened_details.result==result_key && this.opened_details.result_type==result_type_key){
+				this.opened_details.result_type=''
+				this.opened_details.result=null
+			}else{
+				this.opened_details.result=result_key
+				this.opened_details.result_type=result_type_key
+			}
 		},
 		_fetch(item,endpoint=null){
 			if(this.debug){
@@ -165,12 +174,14 @@ h3:first-letter {
 	text-transform: uppercase;
 }
 .card>.type{
-	float:left;
+	float:right;
 	padding:10px;
 	line-height:1;
 	background-color:#333;
 	color:#fff;
-	margin-right:1em;
+	margin-top:1.5em;
+	margin-left:1em;
+	margin-right:-1em;
 }
 img{max-width:100%;height:auto;}
 .card{
@@ -198,9 +209,13 @@ img{max-width:100%;height:auto;}
 	margin:1em 0;
 }
 .items ul{
+	list-style:none;
 	padding:0;
 }
 .items li{
 	margin:1em 0;
+}
+.all-results{
+	font-weight:bolder;
 }
 </style>

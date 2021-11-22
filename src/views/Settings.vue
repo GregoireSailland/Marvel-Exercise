@@ -6,8 +6,9 @@
       <h2>Query method: </h2>
       <div class="option-group">
         <label><input type="radio" :value="query_method" @click="set_query_method('server proxy')" :checked="query_method=='server proxy'">Server proxy</label>
-        <div class="info">
-          <p>Will use nextweb.ch server proxy to send requests</p>
+        <div class="infos">
+          <p>Will use {{server_name}} server proxy to send requests</p>
+          <p>Server url: ({{server_url}})</p>
           <p>This option is best suited for local dev environment</p>
         </div>
       </div>
@@ -66,26 +67,32 @@ export default{
     }
   },
   computed: {
-    public_key() {
-      return this.$store.state.public_key;
+    server_name(){
+      return this.$store.state.server_name!=''?this.$store.state.server_name:'"nextweb.ch"';
     },
-    private_key() {
-      return this.$store.state.private_key;
-    },
-    env_public_key() {
-      return this.$store.state.marvel_public_key||'';
-    },
-    env_private_key() {
-      return this.$store.state.marvel_private_key||'';
-    },
+    server_url(){
+     return this.$store.state.server_url;
+   },
+   public_key() {
+    return this.$store.state.public_key;
+  },
+  private_key() {
+    return this.$store.state.private_key;
+  },
+  env_public_key() {
+    return this.$store.state.marvel_public_key||'';
+  },
+  env_private_key() {
+    return this.$store.state.marvel_private_key||'';
+  },
 
-    query_method() {
-      return this.$store.state.query_method;
-    },
-    debug() {
-      return this.$store.state.debug;
-    }
+  query_method() {
+    return this.$store.state.query_method;
+  },
+  debug() {
+    return this.$store.state.debug;
   }
+}
 }
 </script>
 <style scoped>

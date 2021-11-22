@@ -7,13 +7,15 @@
     </template>
     <template v-else>
       <div class="centered">
-        <label>
+        <label class="endpoints">
           <div>Endpoints</div>
           <!--select :value="current_endpoint" @change="set_current_endpoint($event.target.value)">
             <option value="null"></option>
             <option v-for="(endpoint,endpoint_key) in endpoints" :key="endpoint_key" v-html="endpoint"></option>
           </select!-->
-          <a class="button" @click="set_current_endpoint(endpoint)" v-for="(endpoint,endpoint_key) in endpoints" :key="endpoint_key" v-html="endpoint"></a>
+          <div class="nav">
+            <a class="button" @click="set_current_endpoint(endpoint)" v-for="(endpoint,endpoint_key) in endpoints" :key="endpoint_key" v-html="endpoint"></a>
+          </div>
         </label>
         <label v-if="current_endpoint">
           <div>Search</div>
@@ -48,7 +50,7 @@
             </nav>  
 
             <div v-if="response.data.data.count<response.data.data.total" class="padded">Showing {{response.data.data.count}} results on {{response.data.data.total}}</div>
-              <div class="padded">Showing all of {{response.data.data.total}} results</div>
+              <div v-else class="padded">Showing all of {{response.data.data.total}} results</div>
               <ResultsView @query="(url)=>{/* set_current_endpoint('') &&  */ query(url)}" v-if="response.data.data.results" :results="response.data.data.results"></ResultsView>
             </div>
             <template v-if="debug">
@@ -76,6 +78,7 @@ export default {
     ResultsView
   },
   data:()=>{return {
+    /*It is possible to reorder items*/
     typesFilter: {
       characters:{startsWith:'name',orderBy:['','name','-name','modified','-modified']},
       creators:{startsWith:'name',orderBy:['','lastName','-lastName','firstName','-firstName','middleName','-middleName','suffix','-suffix','modified','-modified']},
@@ -125,7 +128,7 @@ export default {
           let that=this
         switch (this.$store.state.query_method){
           case 'server proxy':
-          axios.get('https://dev.nextweb.ch/marvel/request.php?url='+encodeURIComponent(url),{withCredentials: true}).then(function (response) {
+          axios.get(this.$store.state.server_url+'request.php?url='+encodeURIComponent(url),{withCredentials: true}).then(function (response) {
           // handle success
           if(that.debug)console.log(response);
           that.$store.commit({
@@ -138,17 +141,15 @@ export default {
         }).then(function () {
           that.loading=false
           // always executed
-          console.log('done')
+          //console.log('done')
         });
         break;
         case 'custom api keys':
         var $ts=Date.now()
         console.log('ts',$ts)
-        url +=url.includes('?')?'&':'?'+
-        'apikey='+this.public_key+
-        '&ts='+$ts+
-        '&hash='+this.stringToHash($ts+this.private_key+this.public_key);
-        console.log('hash',$ts+this.private_key+this.public_key)
+        var hash=this.stringToHash($ts+this.private_key+this.public_key)
+        console.log('hash',hash,$ts+this.private_key+this.public_key)
+        url +=(url.includes('?')?'&':'?')+ 'apikey='+this.public_key+'&ts='+$ts+'&hash='+hash
         console.log(url)
         axios.get(url,{withCredentials: false}).then(function (response) {
           // handle success
@@ -163,7 +164,7 @@ export default {
         }).then(function () {
           that.loading=false
           // always executed
-          console.log('done')
+          //console.log('done')
         });
         break;
         default:
@@ -247,7 +248,7 @@ export default {
 </script>
 <style scoped>
 .debug{display:flex;}
-.debug *{flex:1;overflow:auto;}
+.debug>*{flex:1;overflow:auto;}
 .pagination{display:flex;flex-wrap:wrap;align-items: center;justify-content: center;list-style:none;padding:1em;}
 .pagination .page-items{
   text-align: center;
@@ -338,4 +339,16 @@ button svg{width:11px;vertical-align: middle;}
     transform: translate(24px, 0);
   }
 }
+.nav{
+  display:flex;flex-wrap:wrap;
+  justify-content: center;
+}
+@media (max-width:800px){
+  .endpoints .button{
+    padding:1em;
+    margin:.5em;
+  }
+}
+
+
 </style>

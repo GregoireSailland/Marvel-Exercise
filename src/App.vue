@@ -3,8 +3,8 @@
     <h2 class="app-title">Marvel api</h2>
     <div class="spacer"></div>
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
+      <router-link to="/">Home</router-link> <span class="separator">|</span>
+      <router-link to="/about">About</router-link> <span class="separator">|</span>
       <router-link to="/settings">Settings</router-link>
     </div>
   </header>
@@ -62,9 +62,6 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
   line-height: 1;
-}
-ol, ul {
-  list-style: none;
 }
 blockquote, q {
   quotes: none;
@@ -164,9 +161,10 @@ h1{
   padding:0 2em;
 }
 
-
+.separator{display:none;}
 
 @media (min-width:666px){
+  .separator{display:block;}
   .spacer{float:right;padding: 15px;margin:0 15px;width:147.4px;}
 }
 </style>
