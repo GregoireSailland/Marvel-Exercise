@@ -131,10 +131,13 @@ export default{
 }
 .thumbnail img{
 	transform:scale(1);
+	transform-origin:50% 50%;
 	transition:all 3s;
+
 }
 .thumbnail img:hover{
 	transform:scale(1.5);
+	transform-origin:50% 10%;
 }
 .rwesults-view{
 	display:flex;flex-wrap:wrap;align-items: stretch;justify-content: center;
