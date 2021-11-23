@@ -112,6 +112,8 @@ export default {
       })
     },
     query(url,page=null){
+      if(!url || url=='')return
+        url=url.replace('http://','https://')
       if(this.debug)console.log('query',url,page)
         this.loading=true
       this.$store.commit({
@@ -124,7 +126,6 @@ export default {
           url+=(url.match(/\?/)?'&':'?')+'offset='+(page-1)*limit
         }
         //console.log('query',url)
-        if(!url || url=='')return
           let that=this
         switch (this.$store.state.query_method){
           case 'server proxy':
@@ -146,12 +147,11 @@ export default {
         break;
         case 'custom api keys':
         var $ts=Date.now()
-        console.log('ts',$ts)
+        if(this.debug)console.log('ts',$ts)
         var hash=this.stringToHash($ts+this.private_key+this.public_key)
         if(this.debug)console.log('hash',hash,$ts+this.private_key+this.public_key)
           url +=(url.includes('?')?'&':'?')+ 'apikey='+this.public_key+'&ts='+$ts+'&hash='+hash
-        url=url.replace('http://','https://')
-        console.log(url)
+        if(this.debug)console.log(url)
         axios.get(url,{withCredentials: false}).then(function (response) {
           // handle success
           if(that.debug)console.log(response);
@@ -169,7 +169,7 @@ export default {
         });
         break;
         default:
-        console.log('default');
+        console.log('unmanaged query_method',this.$store.state.query_method);
       }
     },
     _search(search){
