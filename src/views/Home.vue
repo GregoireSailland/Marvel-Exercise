@@ -148,8 +148,9 @@ export default {
         var $ts=Date.now()
         console.log('ts',$ts)
         var hash=this.stringToHash($ts+this.private_key+this.public_key)
-        console.log('hash',hash,$ts+this.private_key+this.public_key)
-        url +=(url.includes('?')?'&':'?')+ 'apikey='+this.public_key+'&ts='+$ts+'&hash='+hash
+        if(this.debug)console.log('hash',hash,$ts+this.private_key+this.public_key)
+          url +=(url.includes('?')?'&':'?')+ 'apikey='+this.public_key+'&ts='+$ts+'&hash='+hash
+        url=url.replace('http://','https://')
         console.log(url)
         axios.get(url,{withCredentials: false}).then(function (response) {
           // handle success
@@ -176,52 +177,44 @@ export default {
     },
     stringToHash(string) {
       return MD5(string).toString()
-      /*let hash = 0,i,char;
-      if (string.length == 0) return hash;
-      for (i = 0; i < string.length; i++) {
-        char = string.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-      }
-      return hash;*/
     },
   },
   watch:{
     api_url(new_value){
-      console.log('api_url',new_value,this.$store.state.query_method)
-      if(new_value!=''){
-        this.query(new_value)
+      if(this.debug)console.log('api_url',new_value,this.$store.state.query_method)
+        if(new_value!=''){
+          this.query(new_value)
+        }
       }
-    }
-  },
-  computed:{
-   public_key() {
-    return this.$store.state.public_key;
-  },
-  private_key() {
-    return this.$store.state.private_key;
-  },
-  debug() {
-    return this.$store.state.debug;
-  },
-  last_queried_url(){
-    return this.$store.state.last_queried_url
-  },
-  endpoints(){
-    return Object.keys(this.typesFilter)
-  },
-  current_endpoint(){
-    return this.$store.state.current_endpoint
-  },
-  api_url(){
-    if(!this.$store.state.current_endpoint || this.$store.state.current_endpoint=='')return ''
-      return this.marvel_endpoint+this.$store.state.current_endpoint
-  },
-  response(){
-    return this.$store.state.query_response
-  },
-  page(){
-    return this.response.data.data.offset/this.response.data.data.limit+1
+    },
+    computed:{
+     public_key() {
+      return this.$store.state.public_key;
+    },
+    private_key() {
+      return this.$store.state.private_key;
+    },
+    debug() {
+      return this.$store.state.debug;
+    },
+    last_queried_url(){
+      return this.$store.state.last_queried_url
+    },
+    endpoints(){
+      return Object.keys(this.typesFilter)
+    },
+    current_endpoint(){
+      return this.$store.state.current_endpoint
+    },
+    api_url(){
+      if(!this.$store.state.current_endpoint || this.$store.state.current_endpoint=='')return ''
+        return this.marvel_endpoint+this.$store.state.current_endpoint
+    },
+    response(){
+      return this.$store.state.query_response
+    },
+    page(){
+      return this.response.data.data.offset/this.response.data.data.limit+1
       //return this.$store.state.page
     },
     numPages() {

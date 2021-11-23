@@ -30,23 +30,23 @@ const store = createStore({
 			state.count += amount;
 		},
 		set_key(state,{key,value}){
-			console.log(key,value)
+			if(state.debug)console.log(key,value)
 			state[key]=value
 		},
 		set_query_method(state, { method }) {
-			console.log('set_query_method')
+			if(state.debug)console.log('set_query_method')
 			state.query_method = method;
 		},
 		set_current_endpoint(state, { endpoint }){
-			console.log('set_current_endpoint')
+			if(state.debug)console.log('set_current_endpoint')
 			state.current_endpoint = endpoint;
 		},
 		set_query_response(state, { response }){
-			console.log('set_query_response')
+			if(state.debug)console.log('set_query_response')
 			state.query_response = response;
 		},
 		set_last_queried_url(state, { url }){
-			console.log('set_last_queried_url')
+			if(state.debug)console.log('set_last_queried_url')
 			state.last_queried_url = url
 		},
 		set_debug(state, { value }){
