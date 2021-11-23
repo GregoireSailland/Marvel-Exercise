@@ -100,6 +100,8 @@ npm install
 
 vue ui
 
+# import the project -> Import tab -> select project root directory -> import button 
+
 # then in browser -> Tasks tab -> serve -> launch task
 
 # or
